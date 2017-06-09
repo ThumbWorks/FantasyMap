@@ -24,6 +24,7 @@ class MapScene: SCNScene {
         
         let scene = SCNScene(named: "art.scnassets/Cinderella Castle.dae")!
         self.castleNode = scene.rootNode.childNodes.first!
+        self.castleNode.childNodes.setLightingMode()
         self.castleNode.transform = SCNMatrix4MakeRotation(-Float.pi / 2.0, 1, 0, 0)
         self.castleNode.position = SCNVector3Make(0.061, 0, -0.124)
         self.castleNode.scale = SCNVector3Make(0.013, 0.013, 0.013)
@@ -31,7 +32,19 @@ class MapScene: SCNScene {
         rootNode.addChildNode(self.castleNode)
         
     }
+    
+    
+    
     required init(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
+    }
+}
+
+extension Array where Element == SCNNode {
+    func setLightingMode() {
+        self.forEach { (node) in
+            node.geometry?.firstMaterial?.lightingModel = .physicallyBased
+            node.childNodes.setLightingMode()
+        }
     }
 }
